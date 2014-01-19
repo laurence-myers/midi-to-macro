@@ -340,9 +340,10 @@ Return
 
 MidiInsList(ByRef NumPorts)
   { ; Returns a "|"-separated list of midi output devices
-    local List, MidiInCaps, PortName, result
+    local List, MidiInCaps, PortName, result, PortNameSize
+    PortNameSize := 32 * (A_IsUnicode ? 2 : 1)
     VarSetCapacity(MidiInCaps, 50, 0)
-    VarSetCapacity(PortName, 32)                       ; PortNameSize 32
+    VarSetCapacity(PortName, PortNameSize)                       ; PortNameSize 32
 
     NumPorts := DllCall("winmm.dll\midiInGetNumDevs") ; #midi output devices on system, First device ID = 0
 
@@ -353,7 +354,7 @@ MidiInsList(ByRef NumPorts)
             List .= "|-Error-"
             Continue
           }
-        DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiInCaps+8, UInt,32) ; PortNameOffset 8, PortNameSize 32
+        DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiInCaps+8, UInt,PortNameSize) ; PortNameOffset 8, PortNameSize 32
         PortName := Strget(&PortName, "UTF-8")
         List .= "|" PortName
       }
@@ -377,7 +378,8 @@ MidiInNameGet(uDeviceID = 0) { ; Get name of a midiOut device for a given ID
     ;    DWORD     dwSupport;
 
     VarSetCapacity(MidiInCaps, 50, 0)  ; allows for szPname to be 32 bytes
-    OffsettoPortName := 8, PortNameSize := 32
+    OffsettoPortName := 8
+    PortNameSize := 32 * (A_IsUnicode ? 2 : 1)
     result := DllCall("winmm.dll\midiInGetDevCapsA", UInt,uDeviceID, UInt,&MidiInCaps, UInt,50, UInt)
 
     If (result OR ErrorLevel) {
@@ -415,8 +417,9 @@ MidiInsEnumerate() { ; Returns number of midi output devices, creates global arr
 MidiOutsList(ByRef NumPorts)
   { ; Returns a "|"-separated list of midi output devices
     local List, MidiOutCaps, PortName, result
+    PortNameSize := 32 * (A_IsUnicode ? 2 : 1)
     VarSetCapacity(MidiOutCaps, 50, 0)
-    VarSetCapacity(PortName, 32)                       ; PortNameSize 32
+    VarSetCapacity(PortName, PortNameSize)                       ; PortNameSize 32
 
     NumPorts := DllCall("winmm.dll\midiOutGetNumDevs") ; #midi output devices on system, First device ID = 0
 
@@ -428,7 +431,7 @@ MidiOutsList(ByRef NumPorts)
             List .= "|-Error-"
             Continue
           }
-        DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiOutCaps+8, UInt,32) ; PortNameOffset 8, PortNameSize 32
+        DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiOutCaps+8, UInt,PortNameSize) ; PortNameOffset 8, PortNameSize 32
         PortName := Strget(&PortName, "UTF-8")
         List .= "|" PortName
       }
@@ -526,7 +529,8 @@ MidiOutNameGet(uDeviceID = 0) { ; Get name of a midiOut device for a given ID
     ;    DWORD     dwSupport;
 
     VarSetCapacity(MidiOutCaps, 50, 0)  ; allows for szPname to be 32 bytes
-    OffsettoPortName := 8, PortNameSize := 32
+    OffsettoPortName := 8
+    PortNameSize := 32 * (A_IsUnicode ? 2 : 1)
     result := DllCall("winmm.dll\midiOutGetDevCapsA", UInt,uDeviceID, UInt,&MidiOutCaps, UInt,50, UInt)
 
     If (result OR ErrorLevel) {
