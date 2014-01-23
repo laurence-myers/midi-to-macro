@@ -46,19 +46,19 @@ MidiRules:
     ; =============== CCs (continuous controllers) ===============
     if statusbyte between 176 and 191
     { 
-        tmp_axis_val := Floor((byte2 / 127) * AxisMax_X)
+        tmp_axis_val := Floor((byte2 / max_cc_val) * AxisMax_X)
         VJoy_SetAxis(tmp_axis_val, iInterface, HID_USAGE_X)
         
         ; Default action code below
         cc := byte1 ; pass them as is, no change.
-        gosub, ShowMidiInMessage
+        ;gosub, ShowMidiInMessage
         GuiControl,12:, MidiMsOut, CC %statusbyte% %chan% %cc% %byte2% 
         gosub, ShowMidiOutMessage
         ;gosub, sendCC 
     }
   
     ; Is midi input a Program Change?
-    if statusbyte between 192 and 208  ; check if message is in range of program change messages for byte1 values. ; !!!!!!!!!!!! no edit
+    if statusbyte between 192 and 208
     {
         gosub, sendPC  
     }

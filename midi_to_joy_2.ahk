@@ -41,8 +41,7 @@ gosub, midiMon                  ; see below - a monitor gui - see Midi_In_and_Gu
 ;*         VARIBLES TO SET @ STARTUP
 ;*************************************************
 
-cc_msg = 73,74 ; ++++++++++++++++ you might want to add other vars that load in auto execute section
-max_cc_val = 127
+#Include UserVariables.ahk
 
 return
 
