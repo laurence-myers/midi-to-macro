@@ -13,3 +13,14 @@ DisplayOutput(event, value) {
 				LV_Delete(1)
 			}
 }
+
+ConvertCCValueToAxis(value, maximum_value, maximum_axis_value) {
+	return Floor(ConvertCCValue(value, maximum_value) * maximum_axis_value)
+}
+
+ConvertCCValue(value, maximum_value) {
+	if (value > maximum_value) {
+		value := maximum_value
+	}
+	return (value / maximum_value)
+}

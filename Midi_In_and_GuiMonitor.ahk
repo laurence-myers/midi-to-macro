@@ -93,3 +93,44 @@ gui,14:Add, ListView, x+5 r11 w220 Backgroundblack cyellow Count10 vOut1,  Event
 gui,14:Show, autosize xcenter y5, MidiMonitor
 
 Return
+
+
+;*************************************************
+;*          MIDI OUTPUT LABELS TO CALL
+;*************************************************
+
+SendNote: ;(h_midiout,Note) ; send out note messages ; this should probably be a funciton
+    note = %byte1%                                      ; this var is added to allow transpostion of a note
+    midiOutShortMsg(h_midiout, statusbyte, note, byte2) ; call the midi funcitons with these params.
+    gosub, ShowMidiOutMessage
+Return
+  
+SendCC:   
+    midiOutShortMsg(h_midiout, statusbyte, cc, byte2)
+Return
+ 
+SendPC:
+    gosub, ShowMidiOutMessage
+    midiOutShortMsg(h_midiout, statusbyte, pc, byte2)
+Return
+
+; MIDI Rules dispatcher
+
+MidiRules:
+    if (statusbyte between 128 and 143) { ; Note off
+        ProcessNote(0, chan, byte1, byte2, false)
+    }
+    if (statusbyte between 144 and 159) { ; Note on
+        ProcessNote(0, chan, byte1, byte2, true)
+    }
+    if (statusbyte between 176 and 191) { ; CC
+        ProcessCC(0, chan, byte1, byte2)
+    } 
+    if (statusbyte between 192 and 208) { ; PC
+        ProcessPC(0, chan, byte1, byte2)
+    }
+    if (statusbyte between 224 and 239) { ; Pitch bend
+        ProcessPitchBend(0, chan, pitchb)
+    }
+    ; Maybe TODO: Key aftertouch, channel aftertouch,
+Return
