@@ -5,63 +5,52 @@
 
 /* 
     The MidiRules section is for modifying midi input from some other source.
-    See hotkeys below if you wish to generate midi messages from hotkeys.
-  
-    Write your own MidiRules and put them in this section.
-    Keep rules together under proper section, notes, cc, program change etc.
-    Keep them after the statusbyte has been determined.
-    Examples for each type of rule will be shown. 
-    The example below is for note type message.
-
-    Remember byte1 for a noteon/off is the note number, byte2 is the velocity of that note.
-    
-    Example:
-    
-        ifequal, byte1, 20 ; if the note number coming in is note # 20
-        {
-            byte1 := (do something in here) ; could be do something to the velocity(byte2)
-            gosub, SendNote ; send the note out.
-        }
+    Alter the ProcessNote, ProcessCC, or ProcessPC functions as desired.
 */
 
-MidiRules:
-
-    ; =============== Note On/Off ===============
-    if statusbyte between 128 and 159
-    { 
-        /* 
-        Add your own note filters here.
-        byte1 is the note number, byte2 is the velocity.
-        
-        Example:
-        
-            ifequal, byte1, 20 ; if the note number coming in is note # 20
-            {
-                byte1 := (do something in here) ; could be do something to the velocity(byte2)
-                gosub, SendNote ; send the note out.
+; *** New rule handler functions ***
+ProcessNote(device, channel, note, velocity, isNoteOn) {
+    /* 
+    Add your own note filters here.
+    
+    Example:
+        if (isNoteOn and note == 20)
+        {
+            ; Clamp the velocity to 80
+            if (velocity > 80) {
+                velocity := 80
             }
-        */    
-    } ; end of note block
+            gosub, SendNote ; send the note out.
+        }
+    */
+}
 
-    ; =============== CCs (continuous controllers) ===============
-    if statusbyte between 176 and 191
-    { 
-        tmp_axis_val := Floor((byte2 / max_cc_val) * AxisMax_X)
+ProcessCC(device, channel, cc, value) {
+    global AxisMax_X, max_cc_val, iInterface, HID_USAGE_X
+    if (cc == 7) {
+        tmp_axis_val := Floor((value / max_cc_val) * AxisMax_X)
         VJoy_SetAxis(tmp_axis_val, iInterface, HID_USAGE_X)
-        
-        ; Default action code below
-        cc := byte1 ; pass them as is, no change.
-        ;gosub, ShowMidiInMessage
-        GuiControl,12:, MidiMsOut, CC %statusbyte% %chan% %cc% %byte2% 
-        gosub, ShowMidiOutMessage
-        ;gosub, sendCC 
+        DisplayOutput("Axis X", value)
     }
-  
-    ; Is midi input a Program Change?
-    if statusbyte between 192 and 208
-    {
-        gosub, sendPC  
+}
+
+ProcessPC(device, channel, note, velocity) {
+}
+
+MidiRules:
+    if (statusbyte between 128 and 143) { ; Note off
+        ProcessNote(0, statusbyte - 127, byte1, byte2, false)
     }
+    if (statusbyte between 144 and 159) { ; Note on
+        ProcessNote(0, statusbyte - 127, byte1, byte2, true)
+    }
+    if (statusbyte between 176 and 191) { ; CC
+        ProcessCC(0, statusbyte - 175, byte1, byte2)
+    } 
+    if (statusbyte between 192 and 208) { ; PC
+        ProcessPC(0, statusbyte - 191, byte1, byte2)
+    }
+    ; Maybe TODO: Key aftertouch, channel aftertouch, pitch wheel
 Return
 
 ;*************************************************
@@ -82,6 +71,4 @@ SendPC:
     gosub, ShowMidiOutMessage
     midiOutShortMsg(h_midiout, statusbyte, pc, byte2)
 Return
-
-
 

@@ -15,6 +15,7 @@ Sections with ++++++++++++++++++++ Edit between these marks. You won't break it,
 */
  
 #Include VJoy_lib.ahk 
+#Include mtjFunctions.ahk 
 
 #Persistent
 #SingleInstance
