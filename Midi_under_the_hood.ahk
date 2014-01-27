@@ -355,7 +355,9 @@ MidiInsList(ByRef NumPorts)
             Continue
           }
         DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiInCaps+8, UInt,PortNameSize) ; PortNameOffset 8, PortNameSize 32
-        PortName := Strget(&PortName, "UTF-8")
+        if (A_IsUnicode) {
+            PortName := Strget(&PortName, "UTF-8")
+        }
         List .= "|" PortName
       }
     Return SubStr(List,2)
@@ -389,7 +391,9 @@ MidiInNameGet(uDeviceID = 0) { ; Get name of a midiOut device for a given ID
 
     VarSetCapacity(PortName, PortNameSize)
     DllCall("RtlMoveMemory", Str,PortName, Uint,&MidiInCaps+OffsettoPortName, Uint,PortNameSize)
-    PortName := Strget(&PortName, "UTF-8")
+    if (A_IsUnicode) {
+        PortName := Strget(&PortName, "UTF-8")
+    }
     Return PortName
   }
 
@@ -432,7 +436,9 @@ MidiOutsList(ByRef NumPorts)
             Continue
           }
         DllCall("RtlMoveMemory", Str,PortName, UInt,&MidiOutCaps+8, UInt,PortNameSize) ; PortNameOffset 8, PortNameSize 32
-        PortName := Strget(&PortName, "UTF-8")
+        if (A_IsUnicode) {
+            PortName := Strget(&PortName, "UTF-8")
+        }
         List .= "|" PortName
       }
     Return SubStr(List,2)
@@ -540,7 +546,9 @@ MidiOutNameGet(uDeviceID = 0) { ; Get name of a midiOut device for a given ID
 
     VarSetCapacity(PortName, PortNameSize)
     DllCall("RtlMoveMemory", Str,PortName, Uint,&MidiOutCaps+OffsettoPortName, Uint,PortNameSize)
-    PortName := Strget(&PortName, "UTF-8")
+    if (A_IsUnicode) {
+        PortName := Strget(&PortName, "UTF-8")
+    }
     Return PortName
   }
 
