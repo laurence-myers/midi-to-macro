@@ -120,7 +120,7 @@ Return
 
 MidiRules:
     if (statusbyte >= 128 and statusbyte <= 159) { ; Note off/on
-		isNoteOn := (statusbyte >= 144 or byte2 == 0)
+        isNoteOn := (statusbyte >= 144 and byte2 > 0)
         ProcessNote(0, chan, byte1, byte2, isNoteOn)
     } else if (statusbyte >= 176 and statusbyte <= 191) { ; CC
         ProcessCC(0, chan, byte1, byte2)
