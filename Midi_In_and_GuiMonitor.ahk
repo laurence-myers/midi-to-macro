@@ -90,6 +90,8 @@ gui,14:add,text, x305 y5, Midi Ouput ; %TheChoice2%
 	Gui,14:Add, DropDownList, x270 y20 w140  Choose%TheChoice2% vMidiOutPort gDoneOutChange altsubmit , %MoList%
 Gui,14:Add, ListView, x5 r11 w220 Backgroundblack caqua Count10 vIn1,  EventType|StatB|Ch|Byte1|Byte2| 
 gui,14:Add, ListView, x+5 r11 w220 Backgroundblack cyellow Count10 vOut1,  Event|Value| 
+LV_ModifyCol(1, 105)
+LV_ModifyCol(2, 110)
 gui,14:Show, autosize xcenter y5, MidiMonitor
 
 Return
@@ -117,19 +119,14 @@ Return
 ; MIDI Rules dispatcher
 
 MidiRules:
-    if (statusbyte between 128 and 143) { ; Note off
-        ProcessNote(0, chan, byte1, byte2, false)
-    }
-    if (statusbyte between 144 and 159) { ; Note on
-        ProcessNote(0, chan, byte1, byte2, true)
-    }
-    if (statusbyte between 176 and 191) { ; CC
+    if (statusbyte >= 128 and statusbyte <= 159) { ; Note off/on
+		isNoteOn := (statusbyte >= 144 or byte2 == 0)
+        ProcessNote(0, chan, byte1, byte2, isNoteOn)
+    } else if (statusbyte >= 176 and statusbyte <= 191) { ; CC
         ProcessCC(0, chan, byte1, byte2)
-    } 
-    if (statusbyte between 192 and 208) { ; PC
+    } else if (statusbyte >= 192 and statusbyte <= 208) { ; PC
         ProcessPC(0, chan, byte1, byte2)
-    }
-    if (statusbyte between 224 and 239) { ; Pitch bend
+    } else if (statusbyte >= 224 and statusbyte <= 239) { ; Pitch bend
         ProcessPitchBend(0, chan, pitchb)
     }
     ; Maybe TODO: Key aftertouch, channel aftertouch,

@@ -30,7 +30,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  ; if not xp or 2000 quit
 
 version = midi_to_joy_2        
 VJoy_Init()
-AxisMax_X := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_X)
+gosub VJoyInitMaxValues
 readini()                       ; load values from the ini file, via the readini function - see Midi_under_the_hood.ahk file
 gosub, MidiPortRefresh          ; used to refresh the input and output port lists - see Midi_under_the_hood.ahk file
 port_test(numports,numports2)   ; test the ports - check for valid ports? - see Midi_under_the_hood.ahk file
@@ -44,6 +44,19 @@ gosub, midiMon                  ; see below - a monitor gui - see Midi_In_and_Gu
 
 #Include UserVariables.ahk
 
+return
+
+VJoyInitMaxValues:
+    global AxisMax_X, AxisMax_Y, AxisMax_Z, AxisMax_RX, AxisMax_RY, AxisMax_RZ, AxisMax_SL0, AxisMax_SL1, AxisMax_WHL
+    AxisMax_X  := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_X)
+    AxisMax_Y  := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_Y)
+    AxisMax_Z  := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_Z)
+    AxisMax_RX := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_RX)
+    AxisMax_RY := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_RY)
+    AxisMax_RZ := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_RZ)
+    AxisMax_SL0 := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_SL0)
+    AxisMax_SL1 := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_SL1)
+    AxisMax_WHL := VJoy_GetVJDAxisMax(iInterface, HID_USAGE_WHL)
 return
 
 #Include Midi_In_and_GuiMonitor.ahk ; this file contains: the function to parse midi message into parts we can work with and a midi monitor.

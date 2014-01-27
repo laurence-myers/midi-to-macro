@@ -5,22 +5,21 @@ DisplayOutput(event, value) {
 		LV_Add("",event,value)
 		LV_ModifyCol(1,"center")
 		LV_ModifyCol(2,"center")
-		LV_ModifyCol(3,"center")
-		LV_ModifyCol(4,"center")
-		LV_ModifyCol(5,"center")
 		If (LV_GetCount() > 10)
-			{
-				LV_Delete(1)
-			}
+		{
+			LV_Delete(1)
+		}
 }
 
-ConvertCCValueToAxis(value, maximum_value, maximum_axis_value) {
-	return Floor(ConvertCCValue(value, maximum_value) * maximum_axis_value)
+ConvertToAxis(value, maximum_axis_value) {
+	return Floor(value * maximum_axis_value)
 }
 
-ConvertCCValue(value, maximum_value) {
+ConvertCCValueToScale(value, minimum_value, maximum_value) {
 	if (value > maximum_value) {
 		value := maximum_value
+	} else if (value < minimum_value) {
+		value := minimum_value
 	}
-	return (value / maximum_value)
+	return (value - minimum_value) / (maximum_value - minimum_value)
 }

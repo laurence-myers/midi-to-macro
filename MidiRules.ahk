@@ -4,37 +4,37 @@
 ;*************************************************
 
 /* 
-    The MidiRules section is for modifying midi input from some other source.
+    The MidiRules section is for mapping MIDI input to actions.
     Alter these functions as required.
 */
 
-; *** New rule handler functions ***
 ProcessNote(device, channel, note, velocity, isNoteOn) {
-    /* 
-    Add your own note filters here.
-    
-    Example:
-        if (isNoteOn and note == 20)
-        {
-            ; Clamp the velocity to 80
-            if (velocity > 80) {
-                velocity := 80
-            }
-            gosub, SendNote ; send the note out.
-        }
-    */
+    global iInterface
+
+    if (note >= 1 and note <= 32) {
+        VJoy_SetBtn(isNoteOn, iInterface, note)
+        button_state_text := isNoteOn ? "On" : "Off"
+        DisplayOutput("Button " + button_state_text, note)
+    }
 }
 
 ProcessCC(device, channel, cc, value) {
-    global AxisMax_X, max_cc_val, iInterface, HID_USAGE_X
+    global iInterface, HID_USAGE_X, HID_USAGE_Y, AxisMax_X, AxisMax_Y
     if (cc == 7) {
-        new_axis_value := ConvertCCValueToAxis(value, 127, AxisMax_X)
+        scaled_value := ConvertCCValueToScale(value, 8, 120)
+        new_axis_value := ConvertToAxis(scaled_value, AxisMax_X)
         VJoy_SetAxis(new_axis_value, iInterface, HID_USAGE_X)
-        DisplayOutput("Axis X", ConvertCCValue(value, 127))
+        DisplayOutput("Axis X", scaled_value)
+    } else if (cc == 27) {
+        scaled_value := ConvertCCValueToScale(value, 8, 112)
+        new_axis_value := ConvertToAxis(scaled_value, AxisMax_Y)
+        VJoy_SetAxis(new_axis_value, iInterface, HID_USAGE_Y)
+        DisplayOutput("Axis Y", scaled_value)
     }
 }
 
 ProcessPC(device, channel, note, velocity) {
+    
 }
 
 ProcessPitchBend(device, channel, value) {
