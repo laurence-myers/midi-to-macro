@@ -40,6 +40,10 @@ ProcessCC(device, channel, cc, value) {
     } else if (cc = 57 and value != 0) {
         Send {Media_Next}
         DisplayOutput("Media", "Next")
+    } else if (cc = 58 and value != 0) {
+        ; Place a cue marker in Sound Forge 9
+        ControlSend, , {Alt down}m{Alt up}, ahk_class #32770
+        DisplayOutput("Sound Forge", "Place Cue Marker")
     }
 }
 
