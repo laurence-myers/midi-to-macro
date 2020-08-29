@@ -86,34 +86,12 @@ gui,14:destroy
 gui,14:default
 gui,14:add,text, x80 y5, Midi Input ; %TheChoice%
 	Gui,14:Add, DropDownList, x40 y20 w140 Choose%TheChoice% vMidiInPort gDoneInChange altsubmit, %MiList%  ; (
-gui,14:add,text, x305 y5, Midi Ouput ; %TheChoice2%
-	Gui,14:Add, DropDownList, x270 y20 w140  Choose%TheChoice2% vMidiOutPort gDoneOutChange altsubmit , %MoList%
 Gui,14:Add, ListView, x5 r11 w220 Backgroundblack caqua Count10 vIn1,  EventType|StatB|Ch|Byte1|Byte2| 
 gui,14:Add, ListView, x+5 r11 w220 Backgroundblack cyellow Count10 vOut1,  Event|Value| 
 LV_ModifyCol(1, 105)
 LV_ModifyCol(2, 110)
 gui,14:Show, autosize xcenter y5, MidiMonitor
 
-Return
-
-
-;*************************************************
-;*          MIDI OUTPUT LABELS TO CALL
-;*************************************************
-
-SendNote: ;(h_midiout,Note) ; send out note messages ; this should probably be a funciton
-    note = %byte1%                                      ; this var is added to allow transpostion of a note
-    midiOutShortMsg(h_midiout, statusbyte, note, byte2) ; call the midi funcitons with these params.
-    gosub, ShowMidiOutMessage
-Return
-  
-SendCC:   
-    midiOutShortMsg(h_midiout, statusbyte, cc, byte2)
-Return
- 
-SendPC:
-    gosub, ShowMidiOutMessage
-    midiOutShortMsg(h_midiout, statusbyte, pc, byte2)
 Return
 
 ; MIDI Rules dispatcher

@@ -33,7 +33,6 @@ readini()                       ; load values from the ini file, via the readini
 gosub, MidiPortRefresh          ; used to refresh the input and output port lists - see Midi_under_the_hood.ahk file
 port_test(numports,numports2)   ; test the ports - check for valid ports? - see Midi_under_the_hood.ahk file
 gosub, midiin_go                ; opens the midi input port listening routine see Midi_under_the_hood.ahk file
-gosub, midiout                  ; opens the midi out port see Midi_under_the_hood.ahk file  
 gosub, midiMon                  ; see below - a monitor gui - see Midi_In_and_GuiMonitor.ahk
 
 ;*************************************************

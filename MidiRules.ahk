@@ -13,7 +13,6 @@ ProcessNote(device, channel, note, velocity, isNoteOn) {
 }
 
 ProcessCC(device, channel, cc, value) {
-    global iInterface, HID_USAGE_X, HID_USAGE_Y, AxisMax_X, AxisMax_Y
     if (cc = 21 or cc = 29) {
         scaled_value := ConvertCCValueToScale(value, 0, 127)
         vol := scaled_value * 100
