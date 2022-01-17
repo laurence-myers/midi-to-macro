@@ -12,7 +12,7 @@ ProcessNote(device, channel, note, velocity, isNoteOn) {
 
 }
 
-ProcessCC(device, channel, cc, value) {
+ProcessCC(device, channel, cc, value, oldvalue) {
     if (cc = 21 or cc = 29) {
         scaled_value := ConvertCCValueToScale(value, 0, 127)
         vol := scaled_value * 100
