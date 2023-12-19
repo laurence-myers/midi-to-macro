@@ -12,7 +12,7 @@ Double click on `MidiToMacro.ahk`.
 
 To launch the program when Windows starts, you can add a shortcut to the file in your Start Menu\Startup folder.
 
-The first time you launch the script, you will be prompted to choose a MIDI input device. If you need to change it later, you can right click on the system tray icon and click `MidiSet`. Or, you can open the `MidiMon`, change the input in the "Midi Input" dropdown menu, then reload the script manually.
+The first time you launch the script, you will be prompted to choose a MIDI input device. If you need to change it later, you can right click on the system tray icon and click `MidiSet`. Or, you can open the `MidiMon`, and change the input in the "Midi Input" dropdown menu; the script will automatically reload.
 
 To see a log of recent MIDI input messages and any output events, right click on the system tray icon and click `MidiMon`. You can close this window, and the script will keep running in the background.
 
