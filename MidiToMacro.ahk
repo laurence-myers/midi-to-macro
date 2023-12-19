@@ -35,12 +35,6 @@ port_test(numports,numports2)   ; test the ports - check for valid ports? - see 
 gosub, midiin_go                ; opens the midi input port listening routine see Midi_under_the_hood.ahk file
 gosub, midiMon                  ; see below - a monitor gui - see Midi_In_and_GuiMonitor.ahk
 
-;*************************************************
-;*         VARIBLES TO SET @ STARTUP
-;*************************************************
-
-#Include userVariables.ahk
-
 return
 
 
