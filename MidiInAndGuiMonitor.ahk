@@ -12,7 +12,7 @@
 
 MidiMsgDetect(hInput, midiMsg, wMsg) ; Midi input section in "under the hood" calls this function each time a midi message is received. Then the midi message is broken up into parts for manipulation.  See http://www.midi.org/techspecs/midimessages.php (decimal values).
   {
-    global statusbyte, chan, note, cc, byte1, byte2, stb
+    global statusbyte, chan, note, cc, byte1, byte2, pitchb, stb
     
     statusbyte 	:=  midiMsg & 0xFF			; EXTRACT THE STATUS BYTE (WHAT KIND OF MIDI MESSAGE IS IT?)
     chan 		:= (statusbyte & 0x0f) + 1	; WHAT MIDI CHANNEL IS THE MESSAGE ON?
