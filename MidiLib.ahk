@@ -29,11 +29,7 @@ LoadMidiInputs() {
 	return midiInputs
 }
 
-OnMidiData(hInput, midiMsg, wMsg, hWnd) {
-	ListVars()
-}
-
-OpenMidiInput(midiInputDeviceId) {
+OpenMidiInput(midiInputDeviceId, onMidiMessageCallback) {
 	CALLBACK_WINDOW := 0x10000
 
 	numPorts := DllCall("winmm.dll\midiInGetNumDevs")
@@ -53,5 +49,5 @@ OpenMidiInput(midiInputDeviceId) {
 		Return
 	}
 
-	OnMessage(0x3C3, OnMidiData) ; MM_MIM_DATA, https://learn.microsoft.com/en-us/windows/win32/multimedia/mm-mim-data
+	OnMessage(0x3C3, onMidiMessageCallback) ; MM_MIM_DATA, https://learn.microsoft.com/en-us/windows/win32/multimedia/mm-mim-data
 }

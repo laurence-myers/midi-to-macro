@@ -1,10 +1,14 @@
 #Requires AutoHotkey v2
 #include MidiLib.ahk
 
+OnMidiData(hInput, midiMsg, wMsg, hWnd) {
+	ListVars()
+}
+
 OnMidiInputChange(control, *) {
 	selectedText := control.Text
 	selectedValue := control.Value
-	OpenMidiInput(control.Value - 1)
+	OpenMidiInput(control.Value - 1, OnMidiData)
 }
 
 ShowMidiMonitor() {
