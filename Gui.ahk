@@ -4,8 +4,7 @@
 OnMidiInputChange(control, *) {
 	selectedText := control.Text
 	selectedValue := control.Value
-	; ListVars()
-	LoadMidiInputs()
+	OpenMidiInput(control.Value - 1)
 }
 
 ShowMidiMonitor() {
