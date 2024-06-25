@@ -6,6 +6,7 @@ Persistent()
 #Include Gui.ahk
 
 Main() {
+	OnExit(CloseMidiInput)
 	ShowMidiMonitor()
 }
 

@@ -1,8 +1,19 @@
 #Requires AutoHotkey v2
 
+global currentMidiInputDeviceHandle
+
+CloseMidiInput(*) {
+	global currentMidiInputDeviceHandle
+
+	if (IsSet(currentMidiInputDeviceHandle)) {
+		DllCall("winmm.dll\midiInReset", "UInt", currentMidiInputDeviceHandle)
+		DllCall("winmm.dll\midiInClose", "UInt", currentMidiInputDeviceHandle)
+	}
+}
+
 GetMidiDeviceName(deviceIndex) {
 	; TODO: should we be calling the ANSI version directly, or let AHK decide on W vs A?
-	; TODO: should we parse the port name in UTF-8, or is it some other encoding?
+	; TODO: should we be parsing the port name in UTF-8, or is it some other encoding?
 	midiInCapabilitiesSize := 50
 	midiInCapabilities := Buffer(midiInCapabilitiesSize)
 	result := DllCall("winmm.dll\midiInGetDevCapsA", "UInt", deviceIndex, "Ptr", midiInCapabilities, "UInt", midiInCapabilitiesSize, "UInt")
@@ -29,23 +40,24 @@ LoadMidiInputs() {
 	return midiInputs
 }
 
-OpenMidiInput(midiInputDeviceId, onMidiMessageCallback) {
+OpenMidiInput(midiInputDeviceIndex, onMidiMessageCallback) {
+	global currentMidiInputDeviceHandle
+	CloseMidiInput()
+
 	CALLBACK_WINDOW := 0x10000
-
-	numPorts := DllCall("winmm.dll\midiInGetNumDevs")
-
 	hMidiIn := Buffer(8)
-	result := DllCall("winmm.dll\midiInOpen", "Ptr", hMidiIn, "UInt", midiInputDeviceId, "UInt", A_ScriptHwnd, "UInt", 0, "UInt", CALLBACK_WINDOW, "UInt")
+	result := DllCall("winmm.dll\midiInOpen", "Ptr", hMidiIn, "UInt", midiInputDeviceIndex, "UInt", A_ScriptHwnd, "UInt", 0, "UInt", CALLBACK_WINDOW, "UInt")
 
 	if (result) {
-		MsgBox("Failed to call midiInOpen for device ID " . midiInputDeviceId)
+		MsgBox("Failed to call midiInOpen for device ID " . midiInputDeviceIndex)
 		Return
 	}
 
-	result := DllCall("winmm.dll\midiInStart", "UInt", NumGet(hMidiIn, 0, "UInt"), "UInt")
+	currentMidiInputDeviceHandle := NumGet(hMidiIn, 0, "UInt")
+	result := DllCall("winmm.dll\midiInStart", "UInt", currentMidiInputDeviceHandle, "UInt")
 
 	if (result) {
-		MsgBox("Failed to call midiInStart for device ID " . midiInputDeviceId)
+		MsgBox("Failed to call midiInStart for device ID " . midiInputDeviceIndex)
 		Return
 	}
 
