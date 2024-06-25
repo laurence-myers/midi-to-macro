@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2
 
-global currentMidiInputDeviceHandle
+global currentMidiInputDeviceHandle, currentMidiInputDeviceIndex
 
 CloseMidiInput(*) {
 	global currentMidiInputDeviceHandle
@@ -41,7 +41,7 @@ LoadMidiInputs() {
 }
 
 OpenMidiInput(midiInputDeviceIndex, onMidiMessageCallback) {
-	global currentMidiInputDeviceHandle
+	global currentMidiInputDeviceHandle, currentMidiInputDeviceIndex
 	CloseMidiInput()
 
 	CALLBACK_WINDOW := 0x10000
@@ -62,4 +62,6 @@ OpenMidiInput(midiInputDeviceIndex, onMidiMessageCallback) {
 	}
 
 	OnMessage(0x3C3, onMidiMessageCallback) ; MM_MIM_DATA, https://learn.microsoft.com/en-us/windows/win32/multimedia/mm-mim-data
+	
+	currentMidiInputDeviceIndex := midiInputDeviceIndex
 }

@@ -3,11 +3,11 @@
 #include MidiLib.ahk
 #include MidiRules.ahk
 
-global midiMonitor, lvInEvents, lvOutEvents
+global lvInEvents, lvOutEvents
 
 ; Adds a row to the MIDI input log
 AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
-	global midiMonitor, lvInEvents
+	global lvInEvents
 	lvInEvents.Add("", description, statusByte, channel, byte1, byte2)
 	if (lvInEvents.GetCount() > 10) {
 		lvInEvents.Delete(1)
@@ -19,7 +19,7 @@ AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
 
 ; Adds a row to the MIDI output log
 AppendMidiOutputRow(description, value) {
-	global midiMonitor, lvOutEvents
+	global lvOutEvents
 	lvOutEvents.Add("", description, value)
 	if (lvOutEvents.GetCount() > 10) {
 		lvOutEvents.Delete(1)
@@ -73,14 +73,17 @@ OnMidiInputChange(control, *) {
 }
 
 ; Entry point
-ShowMidiMonitor() {
-	global midiMonitor, lvInEvents, lvOutEvents
+ShowMidiMonitor(*) {
+	global lvInEvents, lvOutEvents
 	midiInputOptions := LoadMidiInputs()
 	; Init GUI
 	midiMonitor := Gui(, "MIDI Monitor")
 	; Label and dropdown
 	midiMonitor.Add("Text", "X80 Y5", "MIDI Input")
 	ddlMidiInput := midiMonitor.Add("DropDownList", "X40 Y20 W140", midiInputOptions)
+	if (IsSet(currentMidiInputDeviceIndex)) {
+		ddlMidiInput.Value := currentMidiInputDeviceIndex + 1
+	}
 	ddlMidiInput.OnEvent("Change", OnMidiInputChange)
 	; List views
 	listViewStyle := "R11 BackgroundBlack Count10"
