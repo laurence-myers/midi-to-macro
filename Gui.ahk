@@ -69,7 +69,10 @@ OnMidiData(hInput, midiMessage, *) {
 
 ; Callback for the MIDI input dropdown list
 OnMidiInputChange(control, *) {
-	OpenMidiInput(control.Value - 1, OnMidiData)
+	deviceIndex := control.Value - 1
+	OpenMidiInput(deviceIndex, OnMidiData)
+	WriteConfig(deviceIndex)
+	AppendMidiOutputRow("Device", GetMidiDeviceName(deviceIndex))
 }
 
 ; Entry point
