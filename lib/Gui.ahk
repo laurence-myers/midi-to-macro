@@ -67,8 +67,9 @@ OnMidiData(hInput, midiMessage, *) {
 OnMidiInputChange(control, *) {
 	deviceIndex := control.Value - 1
 	OpenMidiInput(deviceIndex, OnMidiData)
-	WriteConfig(deviceIndex)
-	AppendMidiOutputRow("Device", GetMidiDeviceName(deviceIndex))
+	deviceName := GetMidiDeviceName(deviceIndex)
+	WriteConfig(deviceIndex, deviceName)
+	AppendMidiOutputRow("Device", deviceName)
 }
 
 ; Entry point
