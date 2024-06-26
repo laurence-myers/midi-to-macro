@@ -8,18 +8,20 @@ global lvInEvents, lvOutEvents
 ; Adds a row to the MIDI input log
 AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
 	global lvInEvents
-	lvInEvents.Add("", description, statusByte, channel, byte1, byte2)
-	if (lvInEvents.GetCount() > 10) {
-		lvInEvents.Delete(1)
-	}
+	AppendRow(lvInEvents, statusByte, channel, byte1, byte2)
 }
 
 ; Adds a row to the MIDI output log
 AppendMidiOutputRow(description, value) {
 	global lvOutEvents
-	lvOutEvents.Add("", description, value)
-	if (lvOutEvents.GetCount() > 10) {
-		lvOutEvents.Delete(1)
+	AppendRow(lvOutEvents, description, value)
+}
+
+; Generic base function to append a row to a list view
+AppendRow(listView, values*) {
+	listView.Add("", values*)
+	if (listView.GetCount() > 10) {
+		listView.Delete(1)
 	}
 }
 
