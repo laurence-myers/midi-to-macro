@@ -1,7 +1,5 @@
 #Requires AutoHotkey v2
 
-#Include Config.ahk
-
 global appConfig
 
 configFileName := "MidiToMacro.ini"

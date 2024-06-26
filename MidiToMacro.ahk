@@ -3,8 +3,8 @@
 #Warn
 Persistent()
 
-#Include Config.ahk
-#Include Gui.ahk
+#Include lib\Config.ahk
+#Include lib\Gui.ahk
 
 Main() {
 	global appConfig, currentMidiInputDeviceIndex
@@ -13,7 +13,7 @@ Main() {
 	A_TrayMenu.Add("MIDI Monitor", ShowMidiMonitor)
 	ReadConfig()
 	if (HasProp(appConfig, "midiInDevice")) {
-		currentMidiInputDeviceIndex := appConfig.midiInDevice
+		OpenMidiInput(appConfig.midiInDevice, OnMidiData)
 	}
 	ShowMidiMonitor()
 }

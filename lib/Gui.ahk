@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2
 #include CommonFunctions.ahk
 #include MidiLib.ahk
-#include MidiRules.ahk
+#include ..\MidiRules.ahk
 
 global lvInEvents, lvOutEvents
 
@@ -12,9 +12,6 @@ AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
 	if (lvInEvents.GetCount() > 10) {
 		lvInEvents.Delete(1)
 	}
-	Loop lvInEvents.GetCount("Column") {
-		lvInEvents.ModifyCol(A_Index, "Center")
-	}
 }
 
 ; Adds a row to the MIDI output log
@@ -23,9 +20,6 @@ AppendMidiOutputRow(description, value) {
 	lvOutEvents.Add("", description, value)
 	if (lvOutEvents.GetCount() > 10) {
 		lvOutEvents.Delete(1)
-	}
-	Loop lvOutEvents.GetCount("Column") {
-		lvOutEvents.ModifyCol(A_Index, "Center")
 	}
 }
 
@@ -89,11 +83,17 @@ ShowMidiMonitor(*) {
 	}
 	ddlMidiInput.OnEvent("Change", OnMidiInputChange)
 	; List views
-	listViewStyle := "R11 BackgroundBlack Count10"
+	listViewStyle := "W220 R11 BackgroundBlack Count10"
 	; List view - MIDI input
 	lvInEvents := midiMonitor.Add("ListView", listViewStyle . " " . "X5 cAqua", ["EventType", "StatB", "Ch", "Byte1", "Byte2"])
+	Loop lvInEvents.GetCount("Column") {
+		lvInEvents.ModifyCol(A_Index, "Center")
+	}
 	; List view - output
 	lvOutEvents := midiMonitor.Add("ListView", listViewStyle . " " . "X+5 cYellow", ["Event", "Value"])
+	Loop lvOutEvents.GetCount("Column") {
+		lvOutEvents.ModifyCol(A_Index, "Center")
+	}
 	; Set column sizes for the output list view
 	lvOutEvents.ModifyCol(1, 105)
 	lvOutEvents.ModifyCol(2, 110)
