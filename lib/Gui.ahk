@@ -100,3 +100,8 @@ ShowMidiMonitor(*) {
 	; Show the GUI
 	midiMonitor.Show("AutoSize xCenter Y5")
 }
+
+ToggleShowOnStartup(*) {
+	WriteConfigShowOnStartup(!appConfig.showOnStartup)
+	A_TrayMenu.ToggleCheck("Show on Startup")
+}
