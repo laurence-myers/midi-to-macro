@@ -4,7 +4,7 @@
 #include ..\MidiRules.ahk
 #include EventHandlers.ahk
 
-global lvInEvents, lvOutEvents
+global lvInEvents, lvOutEvents, midiMonitor
 
 ; Adds a row to the MIDI input log
 AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
@@ -33,7 +33,13 @@ DisplayOutput(event, value) {
 
 ; Entry point
 ShowMidiMonitor(*) {
-	global lvInEvents, lvOutEvents
+	global lvInEvents, lvOutEvents, midiMonitor
+
+	if (IsSet(midiMonitor)) {
+		midiMonitor.Show()
+		return
+	}
+
 	midiInputOptions := LoadMidiInputs()
 	; Init GUI
 	midiMonitor := Gui(, "MIDI Monitor")
