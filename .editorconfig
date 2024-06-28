@@ -1,0 +1,9 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# AutoHotkey files
+[*.{ahk,ahkl}]
+indent_style = tab
+indent_size = tab
