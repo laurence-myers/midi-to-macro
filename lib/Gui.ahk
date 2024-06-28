@@ -20,8 +20,9 @@ AppendMidiOutputRow(description, value) {
 
 ; Generic base function to append a row to a list view
 AppendRow(listView, values*) {
+	global appConfig
 	listView.Add("", values*)
-	if (listView.GetCount() > 10) {
+	if (listView.GetCount() > appConfig.maxLogLines) {
 		listView.Delete(1)
 	}
 }
