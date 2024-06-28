@@ -9,11 +9,11 @@
 	Alter these functions as required.
 */
 
-ProcessNote(channel, note, velocity, isNoteOn) {
+ProcessNote(device, channel, note, velocity, isNoteOn) {
 
 }
 
-ProcessCC(channel, cc, value) {
+ProcessCC(device, channel, cc, value) {
 	if (cc = 21 or cc = 29) {
 		scaledValue := ConvertCCValueToScale(value, 0, 127)
 		volume := scaledValue * 100
@@ -51,10 +51,10 @@ ProcessCC(channel, cc, value) {
 	}
 }
 
-ProcessPC(channel, note, velocity) {
+ProcessPC(device, channel, note, velocity) {
 	
 }
 
-ProcessPitchBend(channel, value) {
+ProcessPitchBend(device, channel, value) {
 	
 }

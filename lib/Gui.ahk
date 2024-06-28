@@ -32,6 +32,8 @@ DisplayOutput(event, value) {
 
 ; Callback from winmm.dll for any MIDI message
 OnMidiData(hInput, midiMessage, *) {
+	global currentMidiInputDeviceIndex
+
 	statusByte := midiMessage & 0xFF
 	channel := (statusByte & 0x0f) + 1
 	byte1 := (midiMessage >> 8) & 0xFF	; Note/CC number
@@ -52,14 +54,14 @@ OnMidiData(hInput, midiMessage, *) {
 
 	if (statusByte >= 128 and statusByte <= 159) { ; Note off/on
 		isNoteOn := (statusByte >= 144 and byte2 > 0)
-		ProcessNote(channel, byte1, byte2, isNoteOn)
+		ProcessNote(currentMidiInputDeviceIndex, channel, byte1, byte2, isNoteOn)
 	} else if (statusByte >= 176 and statusByte <= 191) { ; CC
-		ProcessCC(channel, byte1, byte2)
+		ProcessCC(currentMidiInputDeviceIndex, channel, byte1, byte2)
 	} else if (statusByte >= 192 and statusByte <= 208) { ; PC
-		ProcessPC(channel, byte1, byte2)
+		ProcessPC(currentMidiInputDeviceIndex, channel, byte1, byte2)
 	} else if (statusByte >= 224 and statusByte <= 239) { ; Pitch bend
 		pitchBend := (byte2 << 7) | byte1
-		ProcessPitchBend(channel, pitchBend)
+		ProcessPitchBend(currentMidiInputDeviceIndex, channel, pitchBend)
 	}
 }
 
