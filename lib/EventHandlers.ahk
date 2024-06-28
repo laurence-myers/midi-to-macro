@@ -40,7 +40,7 @@ OnMidiInputChange(control, *) {
 	deviceIndex := control.Value - 1
 	OpenMidiInput(deviceIndex, OnMidiData)
 	deviceName := GetMidiDeviceName(deviceIndex)
-	WriteConfig(deviceIndex, deviceName)
+	WriteConfigMidiDevice(deviceIndex, deviceName)
 	AppendMidiOutputRow("Device", deviceName)
 }
 

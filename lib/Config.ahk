@@ -22,7 +22,7 @@ ReadConfig() {
 	}
 }
 
-WriteConfig(midiInDevice, midiInDeviceName) {
+WriteConfigMidiDevice(midiInDevice, midiInDeviceName) {
 	IniWrite(midiInDevice, configFileName, "Settings", "MidiInDevice")
 	IniWrite(midiInDeviceName, configFileName, "Settings", "MidiInDeviceName")
 	appConfig.midiInDevice := midiInDevice
