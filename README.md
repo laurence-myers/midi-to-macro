@@ -1,20 +1,37 @@
 # MidiToMacro
 
-This is an AutoHotKey script for Windows, to map MIDI input values to hotkeys or macros.
+This is an AutoHotKey v2 script for Windows, to map MIDI input values to hotkeys or macros.
 
-You can use this script to bind CC messages to media keys (play/pause/next), volume sliders, or unusual keyboard combinations (ctrl+shift+alt+F13) which you can assign in programs like StreamLabs OBS.
-
-It's cobbled together from scripts found on the AHK forums. It originally supported mapping MIDI inputs to a virtual joystick using vJoy, and to MIDI outputs; this functionality has been removed. All credit goes to the original authors.
+You can use this script to bind CC messages to media keys (play/pause/next), volume sliders, or unusual keyboard combinations (CTRL+SHIFT+ALT+F13) which you can assign in programs like StreamLabs OBS.
 
 ## Running
 
 Double click on `MidiToMacro.ahk`.
 
-To launch the program when Windows starts, you can add a shortcut to the file in your Start Menu\Startup folder.
+To launch the program when Windows starts, you can add a shortcut to the file in your Start Menu\Startup folder. (Get there quickly by pressing WIN+R, then typing `shell:startup` and ENTER.)
 
-The first time you launch the script, you will be prompted to choose a MIDI input device. If you need to change it later, you can right click on the system tray icon and click `MidiSet`. Or, you can open the `MidiMon`, and change the input in the "Midi Input" dropdown menu; the script will automatically reload.
+When you run the script, it will show the "MIDI Monitor" GUI. Choose your MIDI input from the dropdown list. Incoming MIDI messages will be shown in the left list, and triggered events will be shown on the right.
 
-To see a log of recent MIDI input messages and any output events, right click on the system tray icon and click `MidiMon`. You can close this window, and the script will keep running in the background.
+You can close the "MIDI Monitor" window, and the script will keep running in the background. To see it again, right click on the tray icon and click "MIDI Monitor".
+
+By default, the "MIDI Monitor" GUI will be shown every time you run the script. This can be disabled by right clicking on the tray icon, and unticking the "Show on Startup" option.
+
+When the script starts, it will try to open your chosen MIDI input device. If your MIDI devices change (by adding or removing a device), the MIDI device might not be opened. The GUI will be shown (even if "Show on Startup" is off), and you'll need to select the MIDI device again.
+
+## Configuration
+
+The script can be configured via `MidiToMacro.ini`. This file will be created in the same directory as the script, when you select a MIDI device, or toggle the "Show on Startup" tray menu option. You can also create and edit the file manually.
+
+```ini
+; How many log lines to show in the GUI. Defaults to 10.
+MaxLongLines=10
+; The selected MIDI input device. This is an index starting from 0.
+MidiInDevice=0
+; The name of the selected MIDI input device. This is used to check if the attached MIDI devices has changed.
+MidiInDeviceName=Automap MIDI
+; Set this to 0 to disable the GUI when the script starts.
+ShowOnStartup=1
+```
 
 ## Adding rules
 
@@ -43,18 +60,18 @@ A rule to toggle the mute button when receiving CC 51 might look like this:
 
 ```
 if (cc = 51) {
-    Send {Volume_Mute}
+    Send("{Volume_Mute}")
     DisplayOutput("Volume", "Mute")
 }
 ```
 
-`Send {Volume_Mute}` simulates pressing the "mute" button on your keyboard. `DisplayOutput("Volume", "Mute")` logs a message to the MidiMon GUI.
+`Send("{Volume_Mute}")` simulates pressing the "mute" button on your keyboard. `DisplayOutput("Volume", "Mute")` logs a message to the MidiMon GUI.
 
 A rule to press the play/pause button might look like this:
 
 ```
 if (cc = 54 and value != 0) {
-    Send {Media_Play_Pause}
+    Send("{Media_Play_Pause}")
     DisplayOutput("Media", "Play/Pause")
 }
 ```
@@ -65,25 +82,40 @@ Here's a rule to map a continuous control from a slider to the main Windows mixe
 
 ```
 if (cc = 21 or cc = 29) {
-    scaled_value := ConvertCCValueToScale(value, 0, 127)
-    vol := scaled_value * 100
-    SoundSet, vol
-    DisplayOutput("Volume", vol)
+    scaledValue := ConvertCCValueToScale(value, 0, 127)
+    volume := scaledValue * 100
+    SoundSetVolume(volume)
+    DisplayOutput("Volume", Format('{1:.2f}', volume))
 }
 ```
 
-`ConvertCCValueToScale` is a utility function from `CommonFunctions.ahk`. It converts a value within a give range into a floating point number between 0 and 1.
+`ConvertCCValueToScale` is a utility function from `lib\CommonFunctions.ahk`. It converts a value in a given range, into a floating point number between 0 and 1.
 
 Here's a rule to trigger a keyboard shortcut in a specific application; in this example, Sound Forge 9:
 
 ```
 if (cc = 58 and value != 0) {
     ; Place a cue marker in Sound Forge 9
-    ControlSend, , {Alt down}m{Alt up}, ahk_class #32770
-    DisplayOutput("Sound Forge", "Place Cue Marker")
+    try {
+        ControlSend("{Alt down}m{Alt up}", , "ahk_class #32770")
+        DisplayOutput("Sound Forge", "Place Cue Marker")
+    } catch TargetError {
+        ; Window doesn't exist, oh well
+    }
 }
 ```
 
 You can use AutoHotKey's "WindowSpy" script to identify windows, or controls within an application, for use with `ahk_class`.
 
-You can find [a list of standard CC messages online](https://www.midi.org/specifications-old/item/table-3-control-change-messages-data-bytes-2). You could use any control number without a specified control function, including numbers between 20-31, 52-63, and 102-119. But, any control number should work fine.
+You can find [a list of standard CC messages online](https://web.archive.org/web/20231215150816/https://www.midi.org/specifications-old/item/table-3-control-change-messages-data-bytes-2). You could use any control number without a specified control function, including numbers between 20-31, 52-63, and 102-119. But, any control number should work fine.
+
+## Credits
+
+This script was, in various forms and evolutions, originally based on work by AHK forum members, including (in no particular order):
+
+- genmce
+- Orbik
+- TomB
+- Lazslo
+
+Thanks to [William Wong](https://github.com/compulim), for his implementation of `OpenMidiInput`. (See [autohotkey-boss-fs-1-wl](https://github.com/compulim/autohotkey-boss-fs-1-wl)).
