@@ -109,6 +109,20 @@ You can use AutoHotKey's "WindowSpy" script to identify windows, or controls wit
 
 You can find [a list of standard CC messages online](https://web.archive.org/web/20231215150816/https://www.midi.org/specifications-old/item/table-3-control-change-messages-data-bytes-2). You could use any control number without a specified control function, including numbers between 20-31, 52-63, and 102-119. But, any control number should work fine.
 
+## AutoHotKey version support
+
+This script requires AutoHotKey v2. If you still need v1 support, please use [an older version of this script](https://github.com/laurence-myers/midi-to-macro/tree/ahk-v1).
+
+## Migrating to v2
+
+If you have an existing `MidiRules.ahk` written before MidiToMacro v2, just [update it to support
+AHK v2 syntax](https://www.autohotkey.com/docs/v2/v2-changes.htm). Some basic changes required:
+
+- Change function calls: `Send, ...` -> `Send(...)`
+- Quote strings: `Send, {Volume_up}` -> `Send("{Volume_up}")`
+
+There are no changes to the functions supplied by MidiToMacro, like `DisplayOutput()`.
+
 ## Credits
 
 This script was, in various forms and evolutions, originally based on work by AHK forum members, including (in no particular order):
