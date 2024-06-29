@@ -3,12 +3,14 @@
 global currentMidiInputDeviceHandle, currentMidiInputDeviceIndex
 
 CloseMidiInput(*) {
-	global currentMidiInputDeviceHandle
+	global currentMidiInputDeviceHandle, currentMidiInputDeviceIndex
 
 	if (IsSet(currentMidiInputDeviceHandle)) {
 		DllCall("winmm.dll\midiInReset", "UInt", currentMidiInputDeviceHandle)
 		DllCall("winmm.dll\midiInClose", "UInt", currentMidiInputDeviceHandle)
 	}
+	currentMidiInputDeviceHandle := unset
+	currentMidiInputDeviceIndex := unset
 }
 
 GetMidiDeviceName(deviceIndex) {
