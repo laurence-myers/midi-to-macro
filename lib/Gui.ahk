@@ -8,12 +8,18 @@ global lvInEvents, lvOutEvents, midiMonitor
 
 ; Adds a row to the MIDI input log
 AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
+	if (!IsSet(midiMonitor)) {
+		return
+	}
 	global lvInEvents
 	AppendRow(lvInEvents, statusByte, channel, byte1, byte2)
 }
 
 ; Adds a row to the MIDI output log
 AppendMidiOutputRow(description, value) {
+	if (!IsSet(midiMonitor)) {
+		return
+	}
 	global lvOutEvents
 	AppendRow(lvOutEvents, description, value)
 }
