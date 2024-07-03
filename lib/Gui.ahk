@@ -12,7 +12,7 @@ AppendMidiInputRow(description, statusByte, channel, byte1, byte2) {
 		return
 	}
 	global lvInEvents
-	AppendRow(lvInEvents, statusByte, channel, byte1, byte2)
+	AppendRow(lvInEvents, description, statusByte, channel, byte1, byte2)
 }
 
 ; Adds a row to the MIDI output log
