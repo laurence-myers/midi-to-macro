@@ -24,7 +24,7 @@ The script can be configured via `MidiToMacro.ini`. This file will be created in
 
 ```ini
 ; How many log lines to show in the GUI. Defaults to 10.
-MaxLongLines=10
+MaxLogLines=10
 ; The selected MIDI input device. This is an index starting from 0.
 MidiInDevice=0
 ; The name of the selected MIDI input device. This is used to check if the attached MIDI devices has changed.
